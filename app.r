@@ -139,7 +139,20 @@ ui <- fluidPage(
 	mainPanel(plotOutput("plot2")
 		          ) # Close mainPanel
 			)	# Close tabPanel 2
-		) # Close TabSetPanel
+		), # Close TabSetPanel
+  # Add footer
+tags$footer("This app was developed by Daniel McCartney. Further details are 
+	           provided in ", 
+	           tags$a(
+      				"Refining epigenetic prediction of chronological and biological age.",
+      				target = "_blank",
+      				href = "https://www.biorxiv.org/content/10.1101/2022.09.08.507115v1"
+    					),
+      	"We thank the ", 
+      	tags$a("UCL Medical Genomics Lab ",
+      		target = "_blank", 
+      		href="https://www.ucl.ac.uk/cancer/research/department-cancer-biology/medical-genomics-group"), "for providing base R code, 
+      	which was edited to create the regional plots.", align='centre', style="bottom:0")
 	) # Close UI	  
 
 
