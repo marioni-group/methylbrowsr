@@ -369,53 +369,71 @@ plot2_sites = reactive({
   }
 	})	
   
-  plot2 = reactive({
-  if(input$cpgsearch2 == "" & input$genesearch == ""){
-  drawRegionalPlot(probe_id = NA,
-                chr = input$chromosome,
-                start = input$start, #region start 
-                end= input$end,  #region end
-                title = paste0("chr", input$chromosome, ":", input$start, "-", input$end, " regional plot"),
-                sig.cpgs= NA,
-								dist=0,
-                dataset=plot2_data())
-				} 
-   if(input$cpgsearch2 %in% rownames(plot2_data())){
-	drawRegionalPlot(probe_id = input$cpgsearch2,
-                chr = NA,
-                start = NA, #gene start 
-                end= NA,  #gene end
-                title = paste0(input$cpgsearch2, " regional plot"),
-                sig.cpgs= NA,
-								dist=input$dist,
-                dataset=plot2_data())
-				} 
-	if(toupper(input$genesearch) %in% probe.features$gene_name & input$genesearch!=""){
-	drawRegionalPlot(probe_id = NA,
-                chr = plot2_chr(),
-                start = plot2_start(), #gene start 
-                end= plot2_end(),  #gene end
-                title = paste0(toupper(input$genesearch), " regional plot"),
-                sig.cpgs= NA,
-								dist=input$dist,
-                dataset=plot2_data())
-				} 
-  if(input$cpgsearch2 == "" & input$genesearch == "" & input$chromosome==""){
-		plot(1,0,col="#ffffff00", xaxt="n", yaxt="n", xlab="", ylab="", bty="n")
-    mtext("Please select a CpG, Gene or Genomic Region")			
-    } 
-				})
-   
- 
-  output$plot2 = renderPlot({
-  plot2()
-  }, height = 900, width = 800)
-  
-}
+	  plot2 = reactive({
+	  if(input$cpgsearch2 == "" & input$genesearch == ""){
+	  drawRegionalPlot(probe_id = NA,
+	                chr = input$chromosome,
+	                start = input$start, #region start 
+	                end= input$end,  #region end
+	                title = paste0("chr", input$chromosome, ":", input$start, "-", input$end, " regional plot"),
+	                sig.cpgs= NA,
+									dist=0,
+	                dataset=plot2_data())
+					} 
+	   if(input$cpgsearch2 %in% rownames(plot2_data())){
+		drawRegionalPlot(probe_id = input$cpgsearch2,
+	                chr = NA,
+	                start = NA, #gene start 
+	                end= NA,  #gene end
+	                title = paste0(input$cpgsearch2, " regional plot"),
+	                sig.cpgs= NA,
+									dist=input$dist,
+	                dataset=plot2_data())
+					} 
+		if(toupper(input$genesearch) %in% probe.features$gene_name & input$genesearch!=""){
+		drawRegionalPlot(probe_id = NA,
+	                chr = plot2_chr(),
+	                start = plot2_start(), #gene start 
+	                end= plot2_end(),  #gene end
+	                title = paste0(toupper(input$genesearch), " regional plot"),
+	                sig.cpgs= NA,
+									dist=input$dist,
+	                dataset=plot2_data())
+					} 
+					})
+	   
+
+	plot2_empty =  reactive({
+			plot(1,0,col="#ffffff00", xaxt="n", yaxt="n", xlab="", ylab="", bty="n")
+	    mtext("Please select a CpG, Gene or Genomic Region")			
+	    })
+	 
+	  # output$plot2 = renderPlot({
+	  # plot2()
+	  # }, height = 900, width = 800)
+
+	  
+
+	  observeEvent(c(input$cpgsearch2, input$genesearch, input$chromosome), {
+	    if (input$cpgsearch2 == '' & input$genesearch == "" & input$chromosome=="") {
+	      output$plot2 <- renderPlot({plot2_empty()})
+	    }  
+	    })
+
+	  observeEvent(c(input$cpgsearch2, input$genesearch, input$chromosome), {
+	    if (input$cpgsearch2 != '' | input$genesearch != "" | input$chromosome!="") {
+	      output$plot2 <- renderPlot({plot2()}, height = 900, width = 800)
+	    }  
+	    }) 
+	 
+
+
+	  
+	}
 
 
 
-shinyApp(ui, server)
+	shinyApp(ui, server)
 
 
 #  [1] "cg21649660" "cg03577977" "cg23476957" "cg06974684" "cg04097236"
